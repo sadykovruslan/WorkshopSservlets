@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     private final String passwd = "123456";
+
     LocalTime currentTime = LocalTime.now();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     String formattedTime = currentTime.format(formatter);
@@ -25,7 +26,10 @@ public class LoginServlet extends HttpServlet {
         if(password.equals(passwd)){
             HttpSession session = req.getSession();
             session.setMaxInactiveInterval(10);
-            resp.sendRedirect("/summary");
+            String redirectUrl = (String) session.getAttribute("redirectUrl");
+            if (redirectUrl != null) {
+                resp.sendRedirect(redirectUrl);
+            } else resp.sendRedirect(req.getContextPath() + "/login");
         } else {
             resp.getWriter().println("Wrong password");
         }
