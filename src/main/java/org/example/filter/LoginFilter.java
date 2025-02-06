@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 @WebFilter("/*")
 public class LoginFilter implements Filter {
 
+
     LocalTime currentTime = LocalTime.now();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     String formattedTime = currentTime.format(formatter);
@@ -23,15 +24,17 @@ public class LoginFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         HttpSession session = req.getSession(false);
-        String redirectUrl = req.getRequestURI();
-        req.getSession().setAttribute("redirectUrl", redirectUrl);
+        String requestURI = req.getRequestURI();
 
-        context.log(formattedTime + " [LoginFilter] doFilter");
-
-        if(session == null){
-            resp.sendRedirect(req.getContextPath() + "/login");
-        } else {
+        if (requestURI.endsWith("/login")) {
             filterChain.doFilter(servletRequest, servletResponse);
+            return;
         }
+
+        if (session == null) {
+            String redirectUrl = req.getRequestURI();
+            req.getSession().setAttribute("redirectUrl", redirectUrl);
+            resp.sendRedirect(req.getContextPath() + "/login");
+        } else filterChain.doFilter(servletRequest, servletResponse);
     }
 }

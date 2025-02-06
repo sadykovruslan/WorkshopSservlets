@@ -19,6 +19,13 @@ public class LoginServlet extends HttpServlet {
     String formattedTime = currentTime.format(formatter);
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        var context = req.getServletContext();
+        context.log( formattedTime + " [LoginServlet] doGet");
+        req.getRequestDispatcher("/index.html").forward(req, resp);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         var context = req.getServletContext();
         context.log( formattedTime + " [LoginServlet] doPost ");
@@ -26,10 +33,12 @@ public class LoginServlet extends HttpServlet {
         if(password.equals(passwd)){
             HttpSession session = req.getSession();
             session.setMaxInactiveInterval(10);
+            session.setAttribute("isAuthenticated", true);
+
             String redirectUrl = (String) session.getAttribute("redirectUrl");
-            if (redirectUrl != null) {
+            if (redirectUrl != null && !redirectUrl.equals("/login")) {
                 resp.sendRedirect(redirectUrl);
-            } else resp.sendRedirect(req.getContextPath() + "/login");
+            } else resp.sendRedirect(req.getContextPath() + "/summary");
         } else {
             resp.getWriter().println("Wrong password");
         }
