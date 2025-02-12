@@ -21,12 +21,20 @@ public class SummaryServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         var context = config.getServletContext();
         context.log(formattedTime + " [SummaryServlet] init ");
+
+
         int salary =Integer.parseInt(context.getInitParameter("salary"));
         int rent =Integer.parseInt(config.getInitParameter("rent"));
 
-        List<Transaction> expense = new ArrayList<>();
-        expense.add(new Transaction("rent", rent));
-        context.setAttribute("expenses", expense);
+            //вывод доходов
+        List<Transaction> incomes = new ArrayList<>();
+        incomes.add(new Transaction("salary", salary));
+        context.setAttribute("incomes", incomes);
+
+            //вывод расходов
+         List<Transaction> expenses = new ArrayList<>();
+        expenses.add(new Transaction("rent", rent));
+        context.setAttribute("expenses", expenses);
 
         context.setAttribute("freeMoney", salary - rent);
     }

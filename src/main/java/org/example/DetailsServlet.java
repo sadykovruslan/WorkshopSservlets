@@ -25,15 +25,17 @@ public class DetailsServlet extends HttpServlet {
         var context = req.getServletContext();
         context.log(formattedTime + " [DetailsServlet] doGet");
 
-//        var session = req.getSession(false);
-//        if(session==null){
-//            resp.getWriter().println("Not authorized");
-//            return;
-//        }
         resp.getWriter().println("Expenses: ");
         for (Transaction e : (List<Transaction>) context.getAttribute("expenses")) {
             resp.getWriter().println(String.format("- %s(%d)", e.getName(), e.getSum()));
         }
+
         resp.getWriter().println("\n");
+        resp.getWriter().println("\n");
+
+        resp.getWriter().println("Incomes: ");
+        for (Transaction e : (List<Transaction>) context.getAttribute("incomes")) {
+            resp.getWriter().println(String.format("- %s(%d)", e.getName(), e.getSum()));
+        }
     }
 }

@@ -1,5 +1,6 @@
 package org.example;
 
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -20,13 +21,23 @@ public class IncomesServlet extends HttpServlet {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     String formattedTime = currentTime.format(formatter);
 
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         var context = req.getServletContext();
         context.log(formattedTime + "[IncomesServlet] doGet");
 
-        var incomes = new ArrayList<Transaction>((List)context.getAttribute("incomes"));
-        int salary = Integer.parseInt(context.getInitParameter("salary"));
+        List<Transaction> incomes = new ArrayList<>((List)context.getAttribute("incomes"));
+
+        int freeMoney = (int)context.getAttribute("freeMoney");
+        for(var k : req.getParameterMap().keySet()){
+            int value = Integer.parseInt(req.getParameter(k));
+            freeMoney +=value;
+            incomes.add(new Transaction(k, value));
         }
+
+        context.setAttribute("freeMoney", freeMoney);
+        context.setAttribute("incomes", incomes);
+        resp.getWriter().println("Incomes were added");
+        resp.sendRedirect("/summary");
+    }
 }

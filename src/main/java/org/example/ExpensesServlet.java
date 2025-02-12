@@ -5,9 +5,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.model.Transaction;
-
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -37,5 +35,6 @@ public class ExpensesServlet extends HttpServlet {
         context.setAttribute("freeMoney", freeMoney);
         context.setAttribute("expenses", expenses);
         resp.getWriter().println("Transaction were added");
+        resp.sendRedirect("/summary");
     }
 }

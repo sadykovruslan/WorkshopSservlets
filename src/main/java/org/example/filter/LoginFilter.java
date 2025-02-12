@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-@WebFilter("/*")
+//@WebFilter("/*")
 public class LoginFilter implements Filter {
 
 
